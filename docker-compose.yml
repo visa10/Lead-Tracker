@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: leadtracker
+      POSTGRES_PASSWORD: leadtracker
+      POSTGRES_DB: leadtracker
+    ports:
+      - '5433:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U leadtracker']
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: ./lead-tracker-api
+    ports:
+      - '3001:3001'
+    environment:
+      DATABASE_URL: postgresql://leadtracker:leadtracker@postgres:5432/leadtracker
+      PORT: '3001'
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  ui:
+    build:
+      context: ./lead-tracker-ui
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:3001/api
+    ports:
+      - '3002:3000'
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
+

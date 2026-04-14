@@ -46,14 +46,14 @@ npx prisma migrate dev
 npm run start:dev
 ```
 
-API will be at http://localhost:3000/api, Swagger at http://localhost:3000/api/docs
+API will be at http://localhost:3001/api, Swagger at http://localhost:3001/api/docs
 
 **Frontend:**
 
 ```bash
 cd lead-tracker-ui
 npm install
-echo "NEXT_PUBLIC_API_URL=http://localhost:3000/api" > .env.local
+cp .env.example .env.local
 npm run dev
 ```
 
